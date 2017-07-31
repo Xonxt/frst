@@ -138,3 +138,35 @@ void frst2d(const cv::Mat& inputImage, cv::Mat& outputImage, const int radii, co
 
 	outputImage = S(cv::Rect(radii, radii, width, height));
 }
+
+
+/**
+Perform the specified morphological operation on input image with structure element of specified type and size
+@param inputImage Input image of any type (preferrably 8-bit). The resulting image overwrites the input
+@param operation Name of the morphological operation (MORPH_ERODE, MORPH_DILATE, MORPH_OPEN, MORPH_CLOSE)
+@param mShape Shape of the structure element (MORPH_RECT, MORPH_CROSS, MORPH_ELLIPSE)
+@param mSize Size of the structure element
+@param iterations Number of iterations, how many times to perform the morphological operation
+*/
+void bwMorph(cv::Mat& inputImage, const int operation, const int mShape = cv::MORPH_RECT, const int mSize = 3, const int iterations = 1)
+{
+	int _mSize = (mSize % 2) ? mSize : mSize + 1;
+
+	cv::Mat element = cv::getStructuringElement(mShape, cv::Size(_mSize, _mSize));
+	cv::morphologyEx(inputImage, inputImage, operation, element, cv::Point(-1, -1), iterations);
+}
+/**
+Perform the specified morphological operation on input image with structure element of specified type and size
+@param inputImage Input image of any type (preferrably 8-bit)
+@param outputImage Output image of the same size and type as the input image
+@param operation Name of the morphological operation (MORPH_ERODE, MORPH_DILATE, MORPH_OPEN, MORPH_CLOSE)
+@param mShape Shape of the structure element (MORPH_RECT, MORPH_CROSS, MORPH_ELLIPSE)
+@param mSize Size of the structure element
+@param iterations Number of iterations, how many times to perform the morphological operation
+*/
+void bwMorph(const cv::Mat& inputImage, cv::Mat& outputImage, const int operation, const int mShape = cv::MORPH_RECT, const int mSize = 3, const int iterations = 1)
+{
+	inputImage.copyTo(outputImage);
+
+	bwMorph(outputImage, operation, mShape, mSize, iterations);
+}
